@@ -27,7 +27,7 @@ A production-grade, modular **Venue Management ERP** for premium banquet & event
 
 | Layer | Choice |
 |-------|--------|
-| Framework | Next.js 15 (App Router) + React 19 + TypeScript |
+| Framework | Next.js 14 (App Router) + React 18 + TypeScript |
 | Styling | Tailwind CSS + shadcn/ui |
 | Data layer | PostgreSQL (Supabase) + Prisma ORM |
 | Client state | TanStack React Query |
@@ -67,4 +67,19 @@ docs/             all specifications (this deliverable)
 
 ## Status
 
-This commit delivers the **design & architecture foundation** (items 1–13 above) plus the concrete **database schema** as runnable Prisma. Module implementation proceeds against the milestones in [`docs/ROADMAP.md`](docs/ROADMAP.md).
+- **Design & architecture foundation** — items 1–13 above, plus the runnable Prisma schema.
+- **Phase 1 (complete)** — production app scaffold + Sales CRM vertical slice: auth, dashboard shell, role-based navigation, Customer CRM, lead pipeline, follow-ups, notes, attachments, activity timeline, search & filters. See [`docs/PHASE1.md`](docs/PHASE1.md).
+
+Quality gates for Phase 1 are green: `npm run typecheck` (0 errors), `npm run test` (29 passing), `npm run build` (9 routes). Next phases follow the milestones in [`docs/ROADMAP.md`](docs/ROADMAP.md).
+
+## Quick start
+
+```bash
+npm install
+cp .env.example .env          # fill DATABASE_URL, DIRECT_URL, Supabase keys
+npm run db:deploy             # apply migrations (schema + RLS + double-booking guard)
+npm run db:seed               # demo org, system roles, sample CRM data
+npm run dev                   # http://localhost:3000
+```
+
+See [`docs/PHASE1.md`](docs/PHASE1.md) for the auth-user linking step and architecture notes.

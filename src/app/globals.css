@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 30% 99%;
+    --foreground: 270 15% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 270 15% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 270 15% 12%;
+    --primary: 300 45% 28%;
+    --primary-foreground: 40 40% 98%;
+    --secondary: 40 20% 94%;
+    --secondary-foreground: 270 15% 18%;
+    --muted: 40 20% 96%;
+    --muted-foreground: 270 6% 45%;
+    --accent: 38 78% 52%;
+    --accent-foreground: 270 20% 12%;
+    --destructive: 0 72% 48%;
+    --destructive-foreground: 40 40% 98%;
+    --success: 152 55% 38%;
+    --success-foreground: 40 40% 98%;
+    --warning: 34 92% 45%;
+    --warning-foreground: 40 40% 98%;
+    --border: 40 15% 88%;
+    --input: 40 15% 88%;
+    --ring: 300 45% 40%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 270 20% 8%;
+    --foreground: 40 30% 96%;
+    --card: 270 18% 11%;
+    --card-foreground: 40 30% 96%;
+    --popover: 270 18% 11%;
+    --popover-foreground: 40 30% 96%;
+    --primary: 300 55% 68%;
+    --primary-foreground: 270 25% 10%;
+    --secondary: 270 12% 18%;
+    --secondary-foreground: 40 30% 96%;
+    --muted: 270 12% 16%;
+    --muted-foreground: 270 8% 62%;
+    --accent: 38 80% 58%;
+    --accent-foreground: 270 20% 12%;
+    --destructive: 0 65% 58%;
+    --destructive-foreground: 40 40% 98%;
+    --success: 152 45% 52%;
+    --success-foreground: 270 25% 10%;
+    --warning: 34 90% 58%;
+    --warning-foreground: 270 25% 10%;
+    --border: 270 12% 20%;
+    --input: 270 12% 22%;
+    --ring: 300 55% 62%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
+  }
+  /* Tabular figures for financial/data tables */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}

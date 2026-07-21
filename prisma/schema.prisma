@@ -7,8 +7,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // ============================================================
@@ -43,6 +44,7 @@ model Organization {
   auditLogs    AuditLog[]
   notifications Notification[]
   messageLogs  MessageLog[]
+  crmNotes     Note[]
 
   @@index([slug])
 }
@@ -116,6 +118,7 @@ model Customer {
   contacts   Contact[]
   enquiries  Enquiry[]
   bookings   Booking[]
+  crmNotes   Note[]
 
   @@index([orgId])
   @@index([orgId, phone])
@@ -180,6 +183,7 @@ model Enquiry {
   attachments   Attachment[]
   quotations    Quotation[]
   booking       Booking?
+  crmNotes      Note[]
 
   @@unique([orgId, code])
   @@index([orgId, stage])
@@ -391,8 +395,21 @@ model EventNote {
 // Finance
 // ============================================================
 
-enum PaymentType { ADVANCE INSTALLMENT FINAL REFUND }
-enum PaymentMethod { CASH BANK_TRANSFER UPI CARD CHEQUE ONLINE }
+enum PaymentType {
+  ADVANCE
+  INSTALLMENT
+  FINAL
+  REFUND
+}
+
+enum PaymentMethod {
+  CASH
+  BANK_TRANSFER
+  UPI
+  CARD
+  CHEQUE
+  ONLINE
+}
 
 model Payment {
   id        String   @id @default(cuid())
@@ -623,7 +640,14 @@ model PurchaseOrder {
 // Inventory
 // ============================================================
 
-enum InventoryStatus { AVAILABLE RESERVED IN_USE DAMAGED MAINTENANCE LOST }
+enum InventoryStatus {
+  AVAILABLE
+  RESERVED
+  IN_USE
+  DAMAGED
+  MAINTENANCE
+  LOST
+}
 
 model InventoryItem {
   id        String  @id @default(cuid())
@@ -744,8 +768,19 @@ model StaffAssignment {
 // Tasks, timeline, checklists, approvals
 // ============================================================
 
-enum TaskPriority { LOW MEDIUM HIGH URGENT }
-enum TaskStatus { TODO IN_PROGRESS BLOCKED DONE }
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  BLOCKED
+  DONE
+}
 
 model Task {
   id          String   @id @default(cuid())
@@ -809,7 +844,11 @@ model TimelineMilestone {
   @@index([eventId])
 }
 
-enum ApprovalStatus { PENDING APPROVED REJECTED }
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
 
 model Approval {
   id        String  @id @default(cuid())
@@ -908,4 +947,28 @@ model MessageLog {
   sentAt    DateTime?
 
   @@index([orgId, status])
+}
+
+// ============================================================
+// CRM notes (Phase 1 extension)
+// A timestamped, multi-entry note stream on a customer or enquiry.
+// Complements the single free-text `notes` field on those models.
+// ============================================================
+
+model Note {
+  id         String   @id @default(cuid())
+  orgId      String
+  org        Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  enquiryId  String?
+  enquiry    Enquiry?  @relation(fields: [enquiryId], references: [id], onDelete: Cascade)
+  authorId   String?
+  authorName String?
+  body       String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([orgId, enquiryId])
+  @@index([orgId, customerId])
 }
